@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node ./src/app.js"
+    "start": "node ./src/app.js",
+    "create-db": "psql < ./src/database/schema.sql"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,8 @@
   "homepage": "https://github.com/kamilambert/to-do-list#readme",
   "dependencies": {
     "babel": "^6.23.0",
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "pg": "^6.2.2",
     "pg-promise": "^5.7.0",
