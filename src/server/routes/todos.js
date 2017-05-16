@@ -5,7 +5,7 @@ const db = require('/Users/kamilalambert/Desktop/Projects/to-do-list/src/databas
 
 router.get('/todos', db.getAllTodos)
 router.post('/todos', db.createTodo)
-// router.put('/todos/:id', db.editTodo)
+router.put('/todos/:id', db.editTodo)
 router.delete('/todos/:id', db.removeTodo)
 
 module.exports = router

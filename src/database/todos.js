@@ -69,9 +69,24 @@ function removeTodo (req, res, next) {
 		})
 }
 
+function editTodo (req, res, next) {
+	db.none('UPDATE todos SET to_do=$1, complete=$2',
+		[req.body.to_do, req.body.complete])
+		.then(function () {
+			res.status(200)
+				.json({
+					status: 'success',
+					message: 'Updated todo'
+				})
+		})
+		.catch(function (err) {
+			return next(err)
+		})
+}
+
 module.exports = {
 	getAllTodos: getAllTodos,
 	createTodo: createTodo,
 	removeTodo: removeTodo,
-	// editTodo: editTodo
+	editTodo: editTodo
 }
