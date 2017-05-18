@@ -30,7 +30,7 @@ function getAllTodos (req, res, next) {
 }
 
 function createTodo (req, res, next) {
-	db.none('INSERT INTO todos(to_do, complete)' + 'VALUES($1, FALSE)', [req.body.to_do])
+	db.none('INSERT INTO todos(to_do, complete, edit)' + 'VALUES($1, FALSE, FALSE)', [req.body.to_do])
 		.then( () => res.redirect ('/'))
 		.then(function () {
 			res.status(200)
@@ -60,9 +60,9 @@ function removeTodo (req, res, next) {
 		})
 }
 
-function editTodo (req, res, next) {
-	db.none('UPDATE todos SET to_do=$1, complete=$2',
-		[req.body.to_do, req.body.complete])
+function editToggleTodo (req, res, next) {
+	const todoID = parseInt(req.params.id)	
+	db.any('UPDATE todos SET edit=not edit WHERE id=$1', todoID)
 		.then( () => res.redirect ('/'))
 		.then(function () {
 			res.status(200)
@@ -75,6 +75,23 @@ function editTodo (req, res, next) {
 			return next(err)
 		})
 }
+
+function editTodo (req, res, next) {
+	const todoID = parseInt(req.params.id)
+	db.none('UPDATE todos SET to_do=$2, edit=FALSE WHERE id=$1', [todoID, req.body.to_do])
+		.then( () => res.redirect ('/'))
+		.then(function () {
+			res.status(200)
+				.json({
+					status: 'success',
+					message: 'Updated todo'
+				})
+		})
+		.catch(function (err) {
+			return next(err)
+		})
+}
+
 
 function completeTodo (req, res, next) {
 	const todoID = parseInt(req.params.id)
@@ -117,9 +134,10 @@ module.exports = {
 	getAllTodos: getAllTodos,
 	createTodo: createTodo,
 	removeTodo: removeTodo,
-	editTodo: editTodo,
+	editToggleTodo: editToggleTodo,
 	completeTodo: completeTodo,
-	getOneTodo: getOneTodo
+	getOneTodo: getOneTodo,
+	editTodo: editTodo
 }
 
 

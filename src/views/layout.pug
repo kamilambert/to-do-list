@@ -25,9 +25,15 @@ html
                 button
                   i.fa.fa-check(aria-hidden='true')
             .edit-pencil
-              form(action='/oneTodo/' + to_do.id + '?_method=PUT' method='get')
+              form(action='/editToggle/' + to_do.id + '?_method=PUT' method='post')
                 button
                   i.fa.fa-pencil(aria-hidden='true')
             | #{to_do.to_do}
+          form(
+            action='/editTodo/' + to_do.id + '?_method=PUT'
+            method='post'
+          )    
+            if to_do.edit
+              input(id='input-box' type='text', placeholder='EDIT To-Do', name='to_do')
     script(type='text/javascript', src="https://code.jquery.com/jquery-3.2.1.min.js")
     block content
