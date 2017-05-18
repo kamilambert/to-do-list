@@ -7,5 +7,6 @@ DROP TABLE IF EXISTS todos;
 CREATE TABLE todos(
 	id SERIAL PRIMARY KEY,
 	to_do VARCHAR(40) NOT NULL,
-	complete BOOLEAN
+	complete BOOLEAN,
+	edit BOOLEAN
 );
