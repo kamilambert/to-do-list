@@ -1,0 +1,33 @@
+doctype html
+html
+  head
+    link(rel='stylesheet', href='style.css')
+    link(href='https://fonts.googleapis.com/css?family=Roboto', rel='stylesheet')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css')
+  body
+    #container
+      form(
+        action='/createTodo'
+        method='post'
+      )
+        h1
+          | To-Do List
+        input(id='input-box' type='text', placeholder='Add New To-Do', name='to_do')
+      ul.to-do-list
+        for to_do in data
+          li(class='to-do-list-item '+(to_do.complete ? 'completed' : 'incomplete'))
+            .trash-can
+              form(action='/delete/' + to_do.id + '?_method=DELETE' method='post')
+                button
+                  i.fa.fa-trash(aria-hidden='true')
+            .check-box
+              form(action='/complete/' + to_do.id + '?_method=PUT' method='post')
+                button
+                  i.fa.fa-check(aria-hidden='true')
+            .edit-pencil
+              form(action='/oneTodo/' + to_do.id + '?_method=PUT' method='get')
+                button
+                  i.fa.fa-pencil(aria-hidden='true')
+            | #{to_do.to_do}
+    script(type='text/javascript', src="https://code.jquery.com/jquery-3.2.1.min.js")
+    block content

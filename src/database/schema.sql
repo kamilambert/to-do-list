@@ -9,5 +9,3 @@ CREATE TABLE todos(
 	to_do VARCHAR(40) NOT NULL,
 	complete BOOLEAN
 );
-
-INSERT INTO todos (to_do, complete) VALUES ('go to the store', false);
