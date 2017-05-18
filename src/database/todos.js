@@ -92,27 +92,48 @@ function completeTodo (req, res, next) {
 		})
 }
 
+function getOneTodo(req, res, next) {
+	const todoID = req.params.id
+	db.any('select * from todos where id = $1', todoID)
+	.then(function (data) {
+		res.render('layout', {
+			data
+		})
+	})
+	.then(function (data) {
+		res.status(200)
+			.json({
+				status: 'success',
+				data: data,
+				message: 'Retrieved ONE Todos'
+			})
+	})
+	.catch(function (err) {
+		return next(err)
+	})
+}
+
 module.exports = {
 	getAllTodos: getAllTodos,
 	createTodo: createTodo,
 	removeTodo: removeTodo,
 	editTodo: editTodo,
-	completeTodo: completeTodo
+	completeTodo: completeTodo,
+	getOneTodo: getOneTodo
 }
 
 
-// function getOneTodo(req, res, next) {
-//   let todoID = req.params.id;
-//   db.one('select * from todos where id = $1', todoID)
-//     .then(function (data) {
-//       res.status(200)
-//         .json({
-//           status: 'success',
-//           data: data,
-//           message: 'Retrieved ONE todo'
-//         });
-//     })
-//     .catch(function (err) {
-//       return next(err);
-//     });
+// function updateText(req, res, next) {
+// 	const update = document.getElementById('edit-button')
+//
+// 	update.addEventListener('click', function () {
+// 		fetch('todos', {
+// 			method: 'put',
+// 			headers: {'Content-Type': 'application/json'},
+// 			body: JSON.stringify({
+// 				'name': to_do,
+// 				'complete': FALSE
+// 			})
+// 		})
+// 	})
 // }

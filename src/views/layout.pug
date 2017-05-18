@@ -11,7 +11,7 @@ html
         method='post'
       )
         h1
-          | To-Do List 
+          | To-Do List
         input(id='input-box' type='text', placeholder='Add New To-Do', name='to_do')
       ul.to-do-list
         for to_do in data
@@ -25,7 +25,7 @@ html
                 button
                   i.fa.fa-check(aria-hidden='true')
             .edit-pencil
-              form(action='/edit/' + to_do.id + '?_method=PUT' method='post')
+              form(action='/oneTodo/' + to_do.id + '?_method=PUT' method='get')
                 button
                   i.fa.fa-pencil(aria-hidden='true')
             | #{to_do.to_do}

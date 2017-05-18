@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
-const db = require('/Users/kamilalambert/Desktop/Projects/to-do-list/src/database/todos.js')
+const db = require('../../../src/database/todos.js')
 
 router.get('/', db.getAllTodos)
+router.get('/oneTodo/:id', db.getOneTodo)
 router.post('/createTodo', db.createTodo)
 router.post('/edit/:id', db.editTodo)
 router.post('/delete/:id', db.removeTodo)
