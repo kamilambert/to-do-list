@@ -2,16 +2,9 @@ const chai = require('chai')
 const expect = chai.expect
 const db = require('../../src/database/todos')
 
-describe('getAllTodos()', function() {
-	it('should be a function', function() {
-		expect(db.getAllTodos).to.be.a('function')
-	})
-})
-
 describe('createTodo()', function() {
 	it('should add a single to-do', function(done) {
-		db.createTodoSmall('go to the store')
-		db.createTodoSmall('go to the salon')
+		db.createTodoTest('go to the store')
 		.then(function(){
 			db.getTodoByName('go to the store')
 			.then(function(result) {
@@ -23,12 +16,41 @@ describe('createTodo()', function() {
 	})
 })
 
-describe('removeTodo()', function() {
-	it('should edit a todo', function(done) {
-		db.removeTodoSmall(1)
-		.then(function(result) {
-			expect(result[0].to_do).to.equal()
-			done()
+describe('completeTodo()', function() {
+	it('should check to-do off as complete', function(done) {
+		db.completeTodoTest(1)
+		.then(function() {
+			db.getTodoByName('go to the store')
+			.then(function(result) {
+				expect(result[0].complete).to.equal(true)
+				done()
+			})
+		})
+	})
+})
+
+describe('editToggleTodo()', function() {
+	it('should edit to-do text', function(done) {
+		db.editToggleTodoTest(1)
+		.then(function() {
+			db.getTodoByName('go to the store')
+			.then(function(result) {
+				expect(result[0].edit).to.equal(true)
+				done()
+			})
+		})
+	})
+})
+
+describe('removeTodo()', function(done) {
+	it('should remove a todo', function() {
+		db.removeTodoTest(1)
+		.then(function() {
+			db.getTodoByName('go to the store')
+			.then(function(result) {
+				expect(result).to.equal([])
+				done()
+			})
 		})
 	})
 })
