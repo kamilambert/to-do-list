@@ -9,8 +9,12 @@ const pgp = require('pg-promise')(options)
 const connectionString = 'postgres://localhost:5432/todo_list'
 const db = pgp(connectionString)
 
+function getAllTodosSmall () {
+	return db.any('SELECT * FROM todos')
+}
+
 function getAllTodos (req, res, next) {
-	db.any('SELECT * FROM todos')
+	getAllTodosSmall()
 		.then(function (data) {
 			res.render('layout', {
 				data
@@ -29,8 +33,12 @@ function getAllTodos (req, res, next) {
 		})
 }
 
+function createTodoSmall(to_do) {
+	return db.none('INSERT INTO todos(to_do, complete, edit)' + 'VALUES($1, FALSE, FALSE)', to_do)
+}
+
 function createTodo (req, res, next) {
-	db.none('INSERT INTO todos(to_do, complete, edit)' + 'VALUES($1, FALSE, FALSE)', [req.body.to_do])
+	createTodoSmall(req.body.to_do)
 		.then( () => res.redirect ('/'))
 		.then(function () {
 			res.status(200)
@@ -44,9 +52,13 @@ function createTodo (req, res, next) {
 		})
 }
 
+function removeTodoSmall(id) {
+	return db.result('DELETE FROM todos WHERE id = $1', id)
+}
+
 function removeTodo (req, res, next) {
 	const todoID = parseInt(req.params.id)
-	db.result('DELETE FROM todos WHERE id = $1', todoID)
+	removeTodoSmall(todoID)
 		.then( () => res.redirect ('/'))
 		.then(function (result) {
 			res.status(200)
@@ -61,7 +73,7 @@ function removeTodo (req, res, next) {
 }
 
 function editToggleTodo (req, res, next) {
-	const todoID = parseInt(req.params.id)	
+	const todoID = parseInt(req.params.id)
 	db.any('UPDATE todos SET edit=not edit WHERE id=$1', todoID)
 		.then( () => res.redirect ('/'))
 		.then(function () {
@@ -76,9 +88,13 @@ function editToggleTodo (req, res, next) {
 		})
 }
 
+function editTodoSmall(id, to_do) {
+	return db.none('UPDATE todos SET to_do=$2, edit=FALSE WHERE id=$1', [id, to_do])
+}
+
 function editTodo (req, res, next) {
 	const todoID = parseInt(req.params.id)
-	db.none('UPDATE todos SET to_do=$2, edit=FALSE WHERE id=$1', [todoID, req.body.to_do])
+	editTodoSmall(todoID, req.body.to_do)
 		.then( () => res.redirect ('/'))
 		.then(function () {
 			res.status(200)
@@ -92,10 +108,13 @@ function editTodo (req, res, next) {
 		})
 }
 
+function completeTodoSmall(id) {
+	return db.none('UPDATE todos SET complete=not complete WHERE id=$1', id)
+}
 
 function completeTodo (req, res, next) {
 	const todoID = parseInt(req.params.id)
-	db.none('UPDATE todos SET complete=not complete WHERE id=$1', todoID)
+	completeTodoSmall(todoID)
 		.then( () => res.redirect ('/'))
 		.then(function () {
 			res.status(200)
@@ -109,49 +128,18 @@ function completeTodo (req, res, next) {
 		})
 }
 
-function getOneTodo(req, res, next) {
-	const todoID = req.params.id
-	db.any('select * from todos where id = $1', todoID)
-	.then(function (data) {
-		res.render('layout', {
-			data
-		})
-	})
-	.then(function (data) {
-		res.status(200)
-			.json({
-				status: 'success',
-				data: data,
-				message: 'Retrieved ONE Todos'
-			})
-	})
-	.catch(function (err) {
-		return next(err)
-	})
+function getTodoByName(to_do) {
+	return db.any('select * from todos where to_do=$1', to_do)
 }
 
 module.exports = {
-	getAllTodos: getAllTodos,
-	createTodo: createTodo,
-	removeTodo: removeTodo,
-	editToggleTodo: editToggleTodo,
-	completeTodo: completeTodo,
-	getOneTodo: getOneTodo,
-	editTodo: editTodo
+	getAllTodos,
+	createTodo,
+	removeTodo,
+	editToggleTodo,
+	completeTodo,
+	getTodoByName,
+	editTodo,
+	createTodoSmall,
+	removeTodoSmall
 }
-
-
-// function updateText(req, res, next) {
-// 	const update = document.getElementById('edit-button')
-//
-// 	update.addEventListener('click', function () {
-// 		fetch('todos', {
-// 			method: 'put',
-// 			headers: {'Content-Type': 'application/json'},
-// 			body: JSON.stringify({
-// 				'name': to_do,
-// 				'complete': FALSE
-// 			})
-// 		})
-// 	})
-// }

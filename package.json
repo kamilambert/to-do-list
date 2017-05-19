@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "dropdb todo_list; npm run create-db && node_modules/.bin/mocha test/database",
     "start": "nodemon ./src/app.js",
     "create-db": "psql < ./src/database/schema.sql"
   },
@@ -29,12 +29,12 @@
     "path": "^0.12.7",
     "pg": "^6.2.2",
     "pg-promise": "^5.7.0",
-    "pug": "^2.0.0-rc.1"
+    "pug": "^2.0.0-rc.1",
+		"chai": "^3.5.0",
+		"mocha": "^3.2.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
     "eslint": "^3.19.0",
-    "mocha": "^3.4.1",
     "nodemon": "^1.11.0"
   }
 }

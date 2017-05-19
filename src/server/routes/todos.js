@@ -4,7 +4,7 @@ const router = express.Router()
 const db = require('../../../src/database/todos.js')
 
 router.get('/', db.getAllTodos)
-router.get('/oneTodo/:id', db.getOneTodo)
+router.get('/oneTodo/:to_do', db.getTodoByName)
 router.post('/createTodo', db.createTodo)
 router.post('/editToggle/:id', db.editToggleTodo)
 router.post('/delete/:id', db.removeTodo)
