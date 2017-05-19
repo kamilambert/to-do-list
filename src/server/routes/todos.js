@@ -10,5 +10,8 @@ router.post('/editToggle/:id', db.editToggleTodo)
 router.post('/delete/:id', db.removeTodo)
 router.post('/complete/:id', db.completeTodo)
 router.post('/editTodo/:id', db.editTodo)
+router.get('*', function(req, res) {
+	res.send('This page does not exist. Please wander back to friendly territory.')
+})
 
 module.exports = router
